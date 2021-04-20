@@ -1255,6 +1255,4 @@ public class feeManager extends javax.swing.JFrame {
     Integer totalCalculatedFees = 0;
     ArrayList<JCheckBox> checkBoxList = new ArrayList<>();
     private Double currBalance, totalFees;
-    int rawfiles =0;
-    String name = "Shrenik";
 }

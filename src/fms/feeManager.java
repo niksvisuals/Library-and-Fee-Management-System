@@ -1118,19 +1118,15 @@ public class feeManager extends javax.swing.JFrame {
             ResultSet rs;
             try ( // TODO add your handling code here:
                     Connection con = getDBConnection()) {
-                ps = con.prepareStatement("select * from (\n"
-                        + "    select\n"
-                        + "    \n"
-                        + "	\"student_ID\" as \"Student ID\",\n"
-                        + "	\"totalFees\" as \"Total Fees\",\n"
-                        + "	\"currentPayment\" as \"Last Payment\",\n"
-                        + "	balance as \"Dues\",\n"
-                        + "	transaction_date as \"Last Transaction Date\",\n"
-                        + "        row_number() over(partition by  \"student_ID\" order by transaction_date  desc) as rn\n"
-                        + "    from\n"
-                        + "        \"studFeesInfo\"\n"
-                        + ") t\n"
-                        + "where t.rn = 1 order by \"Last Transaction Date\" desc, \"Student ID\" asc;");
+                ps = con.prepareStatement("select * from (\n" +
+"select                            \n" +
+"\"student_ID\" as \"Student ID\",\n" +
+"\"totalFees\" as \"Total Fees\",\n" +
+"\"currentPayment\" as \"Last Payment\",\n" +
+"balance as \"Dues\",\n" +
+"transaction_date as \"Last Transaction Date\",\n" +
+"row_number() over(partition by  \"student_ID\" order by transaction_date  desc) as rn\n" +
+"                            from \"studFeesInfo\") t where t.rn = 1 and t.\"Dues\" > 0 order by \"Last Transaction Date\" desc, \"Student ID\" asc;");
                 rs = ps.executeQuery();
 
                 jTable1.setModel(DbUtils.resultSetToTableModel(rs));

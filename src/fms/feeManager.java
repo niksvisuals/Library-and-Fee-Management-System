@@ -961,44 +961,44 @@ public class feeManager extends javax.swing.JFrame {
                 ps.setString(3, lname);
                 ps.setString(4, address);
                 ps.setObject(5, contactNum);
-//              Executing query
-                recordAdded = ps.executeUpdate();
-                System.out.println(recordAdded + " student record added.");
-//              ---------------Inserting fee details--------------------
-//              fetching info for fee details
-                String date = dateInp.getText();
                 double Localtotalfees = Double.parseDouble(calculatedFees.getText());
                 double currPayment = Double.parseDouble(currFesInp.getText());
                 double balanceFees = Localtotalfees - currPayment;
+                if(currPayment>Localtotalfees){
+                    throw new paymentMoreThanFees("Payment Cannot be greater than total fees");
+                }
                 String paymentMethodSelected = (String) paymentMethod.getSelectedItem();
                 String referanceID = referanceIdInp.getText();
 //                preparing db query
-                ps = con.prepareStatement("insert into \"studFeesInfo\" values (?,?,?,?,?,?,?);");
-                ps.setDouble(1, Localtotalfees);
-                ps.setDouble(2, currPayment);
-                ps.setDouble(3, balanceFees);
-                ps.setString(4, referanceID);
-                ps.setTimestamp(5,new Timestamp(new Date().getTime()));
-                ps.setString(6, paymentMethodSelected);
-                ps.setInt(7, studID);
-//               executing query
-                recordAdded = ps.executeUpdate();
-                System.out.println(recordAdded + " student fees info added.");
-//                prepare db query for languages
-                ps = con.prepareStatement("insert into \"studentSubjects\"  values (?,?,?,?,?,?);");
-                ps.setInt(1, studID);
+                PreparedStatement ps1 = con.prepareStatement("insert into \"studFeesInfo\" values (?,?,?,?,?,?,?);");
+                ps1.setDouble(1, Localtotalfees);
+                ps1.setDouble(2, currPayment);
+                ps1.setDouble(3, balanceFees);
+                ps1.setString(4, referanceID);
+                ps1.setTimestamp(5,new Timestamp(new Date().getTime()));
+                ps1.setString(6, paymentMethodSelected);
+                ps1.setInt(7, studID);
+                PreparedStatement ps2 = con.prepareStatement("insert into \"studentSubjects\"  values (?,?,?,?,?,?);");
+                ps2.setInt(1, studID);
                 int subIndex = 2;
                 for (JCheckBox jb : checkBoxList) {
                     boolean subject;
                     subject = jb.isSelected();
-                    ps.setBoolean(subIndex, subject);
+                    ps2.setBoolean(subIndex, subject);
                     subIndex++;
                 }
-                recordAdded = ps.executeUpdate();
-                System.out.println(recordAdded + " subject record added.");
+                ps.executeUpdate();
+                ps1.executeUpdate();
+                recordAdded = ps2.executeUpdate();
+//                System.out.println(recordAdded + " subject record added.");
                 con.close();
                 ps.close();
+                ps1.close();
+                ps2.close();
                 JOptionPane.showMessageDialog(this, recordAdded + " student record(s) added.");
+            } catch (paymentMoreThanFees ex) {
+                JOptionPane.showMessageDialog(this, "Payment Cannot be greater than total fees");
+//                Logger.getLogger(feeManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (ClassNotFoundException | NumberFormatException | SQLException ex) {
 //            JOptionPane
@@ -1088,17 +1088,19 @@ public class feeManager extends javax.swing.JFrame {
             }
             Double currPayment = Double.parseDouble(currPaymentInp.getText());
             this.currBalance = Double.parseDouble(currentDbBal.getText());
+            if(currPayment>currBalance){
+                throw new paymentMoreThanFees("Payment Cannot be more than balance amount");
+            }
             PreparedStatement ps;
             ResultSet rs;
             try (Connection con = getDBConnection()) {
                 ps = con.prepareStatement("INSERT into \"studFeesInfo\" (\"student_ID\",balance,transaction_date,\"currentPayment\",\"totalFees\") VALUES \n"
-                        + "(?,?,cast(? as date),?,?);");
+                        + "(?,?,?,?,?);");
                 ps.setInt(1, studID);
                 ps.setDouble(2, (this.currBalance - currPayment));
                 SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd");
                 Date today = new Date();
-                String todayDate = sd.format(today);
-                ps.setString(3, todayDate);
+                ps.setTimestamp(3, new Timestamp(new Date().getTime()));
                 ps.setDouble(4, currPayment);
                 ps.setDouble(5, totalFees);
                 int records = ps.executeUpdate();
@@ -1109,6 +1111,9 @@ public class feeManager extends javax.swing.JFrame {
             ps.close();
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(feeManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (paymentMoreThanFees ex) {
+            JOptionPane.showMessageDialog(this, "Payment Cannot be greater than total fees");
+//            Logger.getLogger(feeManager.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton4ActionPerformed
 
@@ -1270,4 +1275,10 @@ public class feeManager extends javax.swing.JFrame {
     Integer totalCalculatedFees = 0;
     ArrayList<JCheckBox> checkBoxList = new ArrayList<>();
     private Double currBalance, totalFees;
+}
+
+class paymentMoreThanFees extends Exception{
+    public paymentMoreThanFees(String s){
+        super(s);
+    }
 }

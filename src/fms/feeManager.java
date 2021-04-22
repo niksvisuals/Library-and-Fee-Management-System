@@ -540,6 +540,7 @@ public class feeManager extends javax.swing.JFrame {
         jTextField6.setColumns(12);
         jTextField6.setFont(jLabel10.getFont());
         jTextField6.setBorder(calculatedFees.getBorder());
+        jTextField6.setEnabled(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 4;
@@ -968,6 +969,9 @@ public class feeManager extends javax.swing.JFrame {
                 double balanceFees = Localtotalfees - currPayment;
                 String paymentMethodSelected = (String) paymentMethod.getSelectedItem();
                 String referanceID = referanceIdInp.getText();
+                if("".equals(referanceID)||referanceID==null){
+                    referanceID = "Cash";
+                }
 //                preparing db query
                 ps = con.prepareStatement("insert into \"studFeesInfo\" values (?,?,?,?,cast(? as date),?,?);");
                 ps.setDouble(1, Localtotalfees);

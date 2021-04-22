@@ -494,6 +494,7 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="yyyy-MM-dd"/>
                     <Property name="toolTipText" type="java.lang.String" value="yyyy-MM-dd"/>
+                    <Property name="enabled" type="boolean" value="false"/>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Segoe UI" size="13" style="0"/>
                     </Property>
@@ -765,9 +766,6 @@
                     </Property>
                     <Property name="text" type="java.lang.String" value="Transaction Reference ID"/>
                   </Properties>
-                  <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_allCodePost" type="java.lang.String" value="referLabel.setVisible(false);  "/>
-                  </AuxValues>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
                       <GridBagConstraints gridX="0" gridY="7" gridWidth="2" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="4" insetsLeft="0" insetsBottom="4" insetsRight="0" anchor="21" weightX="0.0" weightY="0.0"/>
@@ -776,6 +774,7 @@
                 </Component>
                 <Component class="javax.swing.JTextField" name="referanceIdInp">
                   <Properties>
+                    <Property name="editable" type="boolean" value="false"/>
                     <Property name="columns" type="int" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                       <Connection component="calculatedFees" name="columns" type="property"/>
                     </Property>
@@ -787,7 +786,7 @@
                     </Property>
                   </Properties>
                   <AuxValues>
-                    <AuxValue name="JavaCodeGenerator_allCodePost" type="java.lang.String" value="referanceIdInp.setVisible(false);  "/>
+                    <AuxValue name="JavaCodeGenerator_allCodePost" type="java.lang.String" value="referanceIdInp.setText(randomStringGenerator());&#xd;&#xa;"/>
                   </AuxValues>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">

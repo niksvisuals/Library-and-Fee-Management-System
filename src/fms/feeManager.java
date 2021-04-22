@@ -13,8 +13,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JCheckBox;
@@ -281,6 +283,7 @@ public class feeManager extends javax.swing.JFrame {
         dateInp.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter(new java.text.SimpleDateFormat("yyyy-MM-dd"))));
         dateInp.setText("yyyy-MM-dd");
         dateInp.setToolTipText("yyyy-MM-dd");
+        dateInp.setEnabled(false);
         dateInp.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -476,8 +479,8 @@ public class feeManager extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_START;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
         studFeeDetails.add(referLabel, gridBagConstraints);
-        referLabel.setVisible(false);
 
+        referanceIdInp.setEditable(false);
         referanceIdInp.setColumns(calculatedFees.getColumns());
         referanceIdInp.setFont(calculatedFees.getFont());
         referanceIdInp.setBorder(calculatedFees.getBorder());
@@ -488,7 +491,7 @@ public class feeManager extends javax.swing.JFrame {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.LINE_END;
         gridBagConstraints.insets = new java.awt.Insets(4, 0, 4, 0);
         studFeeDetails.add(referanceIdInp, gridBagConstraints);
-        referanceIdInp.setVisible(false);
+        referanceIdInp.setText(randomStringGenerator());
 
         addNewStudent.add(studFeeDetails);
 
@@ -969,16 +972,13 @@ public class feeManager extends javax.swing.JFrame {
                 double balanceFees = Localtotalfees - currPayment;
                 String paymentMethodSelected = (String) paymentMethod.getSelectedItem();
                 String referanceID = referanceIdInp.getText();
-                if("".equals(referanceID)||referanceID==null){
-                    referanceID = "Cash";
-                }
 //                preparing db query
-                ps = con.prepareStatement("insert into \"studFeesInfo\" values (?,?,?,?,cast(? as date),?,?);");
+                ps = con.prepareStatement("insert into \"studFeesInfo\" values (?,?,?,?,?,?,?);");
                 ps.setDouble(1, Localtotalfees);
                 ps.setDouble(2, currPayment);
                 ps.setDouble(3, balanceFees);
                 ps.setString(4, referanceID);
-                ps.setString(5, date);
+                ps.setTimestamp(5,new Timestamp(new Date().getTime()));
                 ps.setString(6, paymentMethodSelected);
                 ps.setInt(7, studID);
 //               executing query
@@ -1179,6 +1179,21 @@ public class feeManager extends javax.swing.JFrame {
             new feeManager().setVisible(true);
         });
     }
+    
+     public String randomStringGenerator() {
+    int leftLimit = 97; // letter 'a'
+    int rightLimit = 122; // letter 'z'
+    int targetStringLength = 10;
+    Random random = new Random();
+    StringBuilder buffer = new StringBuilder(targetStringLength);
+    for (int i = 0; i < targetStringLength; i++) {
+        int randomLimitedInt = leftLimit + (int) 
+          (random.nextFloat() * (rightLimit - leftLimit + 1));
+//          System.out.println(randomLimitedInt);
+        buffer.append((char) randomLimitedInt);
+    }
+    return buffer.toString();    
+}
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

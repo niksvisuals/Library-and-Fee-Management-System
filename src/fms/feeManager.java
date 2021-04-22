@@ -21,6 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import net.proteanit.sql.DbUtils;
 /**
  *
@@ -785,11 +787,11 @@ public class feeManager extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Name", "Mobile Number", "Last Payment", "Balance"
+                "Student ID", "Total Fees", "Last Payment", "Balance", "Last Transaction"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -1133,8 +1135,18 @@ public class feeManager extends javax.swing.JFrame {
 "row_number() over(partition by  \"student_ID\" order by transaction_date  desc) as rn\n" +
 "                            from \"studFeesInfo\") t where t.rn = 1 and t.\"Dues\" > 0 order by \"Last Transaction Date\" desc, \"Student ID\" asc;");
                 rs = ps.executeQuery();
-
-                jTable1.setModel(DbUtils.resultSetToTableModel(rs));
+                DefaultTableModel tm;
+                tm = (DefaultTableModel) jTable1.getModel();
+                while(rs.next()){
+                    int stud_id = rs.getInt(1);
+                    double total = rs.getDouble(2);
+                    double lastPay = rs.getDouble(3);
+                    double bal = rs.getDouble(4);
+                    Timestamp date = rs.getTimestamp(5);
+                    Object data[] = {stud_id,total,lastPay,bal,date};
+                    tm.addRow(data);
+                }
+//                jTable1.setModel(DbUtils.resultSetToTableModel(rs));
                 ps.close();
                 rs.close();
             } catch (ClassNotFoundException ex) {

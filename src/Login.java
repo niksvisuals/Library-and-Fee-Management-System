@@ -9,7 +9,7 @@ import javax.swing.*;
 
 /**
  *
- * @author HP
+ * @author Vaibhav
  */
 public class Login extends javax.swing.JFrame {
 
@@ -39,7 +39,7 @@ public class Login extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Login");
 
-        jPanel1.setBackground(new java.awt.Color(255, 255, 102));
+        jPanel1.setBackground(new java.awt.Color(102, 255, 0));
 
         jLabel1.setFont(new java.awt.Font("Calibri", 0, 24)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 102));
@@ -112,7 +112,7 @@ public class Login extends javax.swing.JFrame {
          String u = jTextField1.getText();
         char p1[] = jPasswordField1.getPassword();
         String p = new String(p1); 
-        if((u.equals("sandeep") && p.equals("0000"))||(u.equals("gupta") && p.equals("1111")))
+        if((u.equals("vaibhav") && p.equals("0000"))||(u.equals("vesmaker") && p.equals("1111")))
         {
          Landing h = new Landing();
          h.setVisible(true);

@@ -9,7 +9,7 @@ import java.sql.*;
 
 /**
  *
- * @author Sandeep J Gupta
+ * @author Vaibhav
  */
 public class DeleteBook extends javax.swing.JFrame 
 {
@@ -149,13 +149,17 @@ public class DeleteBook extends javax.swing.JFrame
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 try
 {  
-Class.forName("com.mysql.cj.jdbc.Driver");
-con=DriverManager.getConnection("jdbc:mysql://localhost:3306/librarydb","sandeep1","studycircle");
+String usrname = "postgres";
+        String password = "3036";
+        Class.forName("org.postgresql.Driver");
+        
+Class.forName("org.postgresql.Driver");
+con=DriverManager.getConnection("jdbc:postgresql://localhost:5432/Java Mini Project",usrname,password);
 stmt=con.createStatement();  
   
 id = jTextField1.getText();
 title = jTextField2.getText();
-int affectedRecords = stmt.executeUpdate("DELETE FROM  books WHERE id = '"+id+"'OR title = '"+title+"'");
+int affectedRecords = stmt.executeUpdate("DELETE FROM  book WHERE id = '"+id+"'OR title = '"+title+"'");
 if(affectedRecords==0)
     JOptionPane.showMessageDialog(this,"Required Book Not Found !!");
 else

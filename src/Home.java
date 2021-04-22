@@ -10,7 +10,7 @@ import javax.swing.*;
 
 /**
  *
- * @author HP
+ * @author Vaibhav
  */
 public class Home extends javax.swing.JFrame
 {
@@ -206,11 +206,15 @@ ReturnBook a = new ReturnBook();
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
             try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/librarydb", "sandeep1", "studycircle");
+            String usrname = "postgres";
+        String password = "3036";
+        Class.forName("org.postgresql.Driver");
+        
+Class.forName("org.postgresql.Driver");
+con=DriverManager.getConnection("jdbc:postgresql://localhost:5432/Java Mini Project",usrname,password);
             stmt = con.createStatement();
 
-            rs = stmt.executeQuery("SELECT * FROM  books");
+            rs = stmt.executeQuery("SELECT * FROM  book");
 
             String result[][] = new String[100][4];
             int i = 0;

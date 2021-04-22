@@ -9,7 +9,7 @@ import fms.feeManager;
 
 /**
  *
- * @author shren
+ * @author Vaibhav
  */
 public class Landing extends javax.swing.JFrame {
 

@@ -1,7 +1,8 @@
 
 import javax.swing.*;
 import java.sql.*;
-
+import net.proteanit.sql.DbUtils;
+import org.postgresql.util.PSQLException;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -10,7 +11,7 @@ import java.sql.*;
 
 /**
  *
- * @author Sandeep J Gupta
+ * @author Vaibhav
  */
 public class AddBook extends javax.swing.JFrame {
     Connection  con ;
@@ -167,16 +168,19 @@ public class AddBook extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 try
 {  
-
-Class.forName("com.mysql.cj.jdbc.Driver");
-con=DriverManager.getConnection("jdbc:mysql://localhost:3306/librarydb","sandeep1","studycircle");
+String usrname = "postgres";
+        String password = "3036";
+        Class.forName("org.postgresql.Driver");
+        
+Class.forName("org.postgresql.Driver");
+con=DriverManager.getConnection("jdbc:postgresql://localhost:5432/Java Mini Project",usrname,password);
 stmt=con.createStatement();  
   
 id = jTextField1.getText();
 title = jTextField2.getText();
 author = jTextField3.getText();
 pub = jTextField4.getText();
-int j = stmt.executeUpdate("INSERT INTO books VALUES('"+id+"','"+title+"','"+author+"','"+pub+"')");
+int j = stmt.executeUpdate("INSERT INTO book VALUES('"+id+"','"+title+"','"+author+"','"+pub+"')");
 // Dont forget that in SQL queries, a string should be in single quotes
 if(j==1)
     JOptionPane.showMessageDialog(this,"1 Book Added to Database");

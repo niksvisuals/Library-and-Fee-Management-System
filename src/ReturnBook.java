@@ -2,6 +2,9 @@
 import javax.swing.*;
 import java.sql.*;
 import java.time.*; // required for class LocalDate
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static java.time.temporal.ChronoUnit.DAYS;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -12,14 +15,14 @@ import java.time.*; // required for class LocalDate
  *
  * @author Vaibhav
  */
-public class ReturnBook extends javax.swing.JFrame 
-{
-    Connection  con ;
-    Statement  stmt ;
-    ResultSet  rs;
-    
-    String  id, issue_date ;
-    int n, fine, amount_collected ;
+public class ReturnBook extends javax.swing.JFrame {
+
+    Connection con;
+    PreparedStatement stmt;
+    ResultSet rs;
+
+    String id, issue_date;
+    int n, fine, amount_collected;
 
     /**
      * Creates new form AddBook
@@ -140,44 +143,7 @@ public class ReturnBook extends javax.swing.JFrame
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-try
-{  
-String usrname = "postgres";
-        String password = "3036";
-        Class.forName("org.postgresql.Driver");
-        
-Class.forName("org.postgresql.Driver");
-con=DriverManager.getConnection("jdbc:postgresql://localhost:5432/Java Mini Project",usrname,password);
-stmt=con.createStatement();  
-  
-id = jTextField1.getText();
-rs=stmt.executeQuery("SELECT * FROM  issued_books WHERE id = '"+id+"'");
-// Dont forget that in SQL queries, a string should be in single quotes
-if (!rs.next()) 
-    JOptionPane.showMessageDialog(this,"Required Book Not Found !!");
-else 
-{
-    issue_date = rs.getString(5);    
-    LocalDate  dor = LocalDate.now();
-    LocalDate  doi = LocalDate.parse(issue_date.substring(0,10));
-    n = (int)(dor.toEpochDay()-doi.toEpochDay());
-    if(n<=7)
-        fine = 0;
-    else
-        fine = 5 * n ;
-    
-    JOptionPane.showMessageDialog(this,"No. of Days: "+n+"\nPay Fine: "+fine);
-}
- 
-con.close();  
-}
-catch(Exception e)
-{ System.out.println(e);}   
- 
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private static final Logger LOG = Logger.getLogger(ReturnBook.class.getName());
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Home l = new Home();
@@ -187,38 +153,70 @@ catch(Exception e)
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-try
-{  
-String usrname = "postgres";
-        String password = "Vaibhav@21";
-        Class.forName("org.postgresql.Driver");
-        
-Class.forName("org.postgresql.Driver");
-con=DriverManager.getConnection("jdbc:postgresql://localhost:5432/Java Mini Project",usrname,password);
-stmt=con.createStatement();  
-  
-id = jTextField1.getText();
-int affectedRecords = stmt.executeUpdate("DELETE FROM  issued_books WHERE id = '"+id+"'");
-if(affectedRecords==0)
-    JOptionPane.showMessageDialog(this,"Required Book Not Found !!");
-else
-    JOptionPane.showMessageDialog(this,"Book Successfully returned");
+        try {
+            String usrname = "postgres";
+            String password = "3036";
+            Class.forName("org.postgresql.Driver");
 
-rs=stmt.executeQuery("SELECT * FROM  variable");
-if(rs.next())
-    amount_collected = rs.getInt(1);
-amount_collected += fine;
-affectedRecords = stmt.executeUpdate("UPDATE variable SET amount_collected='"+amount_collected+"'");
+//            Class.forName("org.postgresql.Driver");
+            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Java Mini Project", usrname, password);
+            stmt = (PreparedStatement) con.createStatement();
 
+            id = jTextField1.getText();
+            int affectedRecords = stmt.executeUpdate("DELETE FROM  issued_books WHERE id = '" + id + "'");
+            if (affectedRecords == 0) {
+                JOptionPane.showMessageDialog(this, "Required Book Not Found !!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Book Successfully returned");
+            }
 
-jTextField1.setText(null);
- 
-con.close();  
-}
-catch(Exception e)
-{ System.out.println(e);}   
+            rs = stmt.executeQuery("SELECT * FROM  variable");
+            if (rs.next()) {
+                amount_collected = rs.getInt(1);
+            }
+            amount_collected += fine;
+            affectedRecords = stmt.executeUpdate("UPDATE variable SET amount_collected='" + amount_collected + "'");
+
+            jTextField1.setText(null);
+
+            con.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        try {
+            // TODO add your handling code here:
+            Class.forName("org.postgresql.Driver");
+            Connection con1 = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Java Mini Project","postgres","3036");
+            PreparedStatement sp1 = con1.prepareStatement("select * from postgres.issued_books where id =?;");
+            sp1.setInt(1,Integer.parseInt(jTextField1.getText()));
+            ResultSet rs1 = sp1.executeQuery();
+            if(rs1.next()){
+                JOptionPane.showMessageDialog(this,"Required Book Not Found !!");
+            }
+            else{
+                System.out.println("timestamp: "+rs1.getTimestamp(5));
+                LocalDateTime doi =rs1.getTimestamp(5).toLocalDateTime();
+                LocalDateTime dor = LocalDateTime.now();
+                System.out.println("doi: "+doi+" dor: "+dor);
+                long days = DAYS.between(doi, dor);
+                System.out.println("Days difference: "+days);
+                if(days<=7)
+                    fine = 0;
+                else
+                    fine = 5 * (int)days ;
+    
+    JOptionPane.showMessageDialog(this,"No. of Days: "+n+"\nPay Fine: "+fine);
+            }
+            
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(ReturnBook.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
      * @param args the command line arguments

@@ -1021,8 +1021,9 @@ public class feeManager extends javax.swing.JFrame {
 
             PreparedStatement ps;
             try (Connection con = getDBConnection()) {
-                ps = con.prepareStatement("select rr.\"Student_ID\", rr.\"First Name\", Daa.\"totalFees\", Daa.balance from \"studentBasicInfo\"  rr\n"
-                        + "left join \"studFeesInfo\" Daa on rr.\"Student_ID\" = Daa.\"student_ID\" where rr.\"Contact\"=? or rr.\"Student_ID\"=?;");
+                ps = con.prepareStatement("select rr.\"Student_ID\", rr.\"First Name\", Daa.\"totalFees\", Daa.balance from \"studentBasicInfo\"  rr\n" +
+"left join \"studFeesInfo\" Daa on rr.\"Student_ID\" = Daa.\"student_ID\" where rr.\"Contact\"=? or rr.\"Student_ID\"=?\n" +
+"order by Daa.transaction_date desc limit 1;");
                 ps.setObject(1, mobile);
                 ps.setInt(2, studID);
                 ResultSet rs = ps.executeQuery();

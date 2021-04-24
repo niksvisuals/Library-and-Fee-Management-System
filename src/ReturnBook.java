@@ -152,40 +152,6 @@ public class ReturnBook extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        try {
-            String usrname = "postgres";
-            String password = "3036";
-            Class.forName("org.postgresql.Driver");
-
-//            Class.forName("org.postgresql.Driver");
-            con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Java Mini Project", usrname, password);
-            stmt = (PreparedStatement) con.createStatement();
-
-            id = jTextField1.getText();
-            int affectedRecords = stmt.executeUpdate("DELETE FROM  issued_books WHERE id = '" + id + "'");
-            if (affectedRecords == 0) {
-                JOptionPane.showMessageDialog(this, "Required Book Not Found !!");
-            } else {
-                JOptionPane.showMessageDialog(this, "Book Successfully returned");
-            }
-
-            rs = stmt.executeQuery("SELECT * FROM  variable");
-            if (rs.next()) {
-                amount_collected = rs.getInt(1);
-            }
-            amount_collected += fine;
-            affectedRecords = stmt.executeUpdate("UPDATE variable SET amount_collected='" + amount_collected + "'");
-
-            jTextField1.setText(null);
-
-            con.close();
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
-
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
             // TODO add your handling code here:
@@ -194,7 +160,7 @@ public class ReturnBook extends javax.swing.JFrame {
             PreparedStatement sp1 = con1.prepareStatement("select * from postgres.issued_books where id =?;");
             sp1.setInt(1,Integer.parseInt(jTextField1.getText()));
             ResultSet rs1 = sp1.executeQuery();
-            if(rs1.next()){
+            if(!rs1.next()){
                 JOptionPane.showMessageDialog(this,"Required Book Not Found !!");
             }
             else{
@@ -209,7 +175,10 @@ public class ReturnBook extends javax.swing.JFrame {
                 else
                     fine = 5 * (int)days ;
     
-    JOptionPane.showMessageDialog(this,"No. of Days: "+n+"\nPay Fine: "+fine);
+    JOptionPane.showMessageDialog(this,"No. of Days: "+days+"\nPay Fine: "+fine);
+    con1.close();
+    sp1.close();
+//    rs.close();
             }
             
         } catch (ClassNotFoundException | SQLException ex) {
@@ -217,6 +186,22 @@ public class ReturnBook extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        try {
+            Class.forName("org.postgresql.Driver");
+            PreparedStatement sp1;
+            try (Connection con1 = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Java Mini Project","postgres","3036")) {
+                sp1 = con1.prepareStatement("update variable set amount_collected =amount_collected +?; ");
+                sp1.setInt(1, fine);
+                int record = sp1.executeUpdate();
+                System.out.println("Record updated: "+record);
+            }
+            sp1.close();
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(ReturnBook.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments

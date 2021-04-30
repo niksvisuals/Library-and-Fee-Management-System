@@ -1027,7 +1027,7 @@ public class feeManager extends javax.swing.JFrame {
                 ps.setObject(1, mobile);
                 ps.setInt(2, studID);
                 ResultSet rs = ps.executeQuery();
-                System.out.println("dbutils");
+//                System.out.println("dbutils");
                 jTable2.setModel(DbUtils.resultSetToTableModel(rs));
             }
             ps.close();
@@ -1138,6 +1138,7 @@ public class feeManager extends javax.swing.JFrame {
                 rs = ps.executeQuery();
                 DefaultTableModel tm;
                 tm = (DefaultTableModel) jTable1.getModel();
+                tm.setRowCount(0);
                 while(rs.next()){
                     int stud_id = rs.getInt(1);
                     double total = rs.getDouble(2);

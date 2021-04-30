@@ -5,8 +5,6 @@
 -- Dumped from database version 11.10
 -- Dumped by pg_dump version 11.10
 
--- Started on 2021-04-22 19:40:06
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -19,7 +17,6 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- TOC entry 6 (class 2615 OID 26456)
 -- Name: postgres; Type: SCHEMA; Schema: -; Owner: postgres
 --
 
@@ -33,7 +30,6 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- TOC entry 199 (class 1259 OID 26504)
 -- Name: book; Type: TABLE; Schema: postgres; Owner: postgres
 --
 
@@ -48,7 +44,6 @@ CREATE TABLE postgres.book (
 ALTER TABLE postgres.book OWNER TO postgres;
 
 --
--- TOC entry 200 (class 1259 OID 26510)
 -- Name: issued_books; Type: TABLE; Schema: postgres; Owner: postgres
 --
 
@@ -57,14 +52,13 @@ CREATE TABLE postgres.issued_books (
     title character varying,
     student_id bigint,
     student_name character varying,
-    "CURRENT_TIMESTAMP" time without time zone
+    issued_time timestamp(0) without time zone
 );
 
 
 ALTER TABLE postgres.issued_books OWNER TO postgres;
 
 --
--- TOC entry 197 (class 1259 OID 26471)
 -- Name: studFeesInfo; Type: TABLE; Schema: postgres; Owner: postgres
 --
 
@@ -82,7 +76,6 @@ CREATE TABLE postgres."studFeesInfo" (
 ALTER TABLE postgres."studFeesInfo" OWNER TO postgres;
 
 --
--- TOC entry 196 (class 1259 OID 26466)
 -- Name: studentBasicInfo; Type: TABLE; Schema: postgres; Owner: postgres
 --
 
@@ -98,7 +91,6 @@ CREATE TABLE postgres."studentBasicInfo" (
 ALTER TABLE postgres."studentBasicInfo" OWNER TO postgres;
 
 --
--- TOC entry 198 (class 1259 OID 26481)
 -- Name: studentSubjects; Type: TABLE; Schema: postgres; Owner: postgres
 --
 
@@ -115,7 +107,6 @@ CREATE TABLE postgres."studentSubjects" (
 ALTER TABLE postgres."studentSubjects" OWNER TO postgres;
 
 --
--- TOC entry 201 (class 1259 OID 26516)
 -- Name: variable; Type: TABLE; Schema: postgres; Owner: postgres
 --
 
@@ -127,7 +118,6 @@ CREATE TABLE postgres.variable (
 ALTER TABLE postgres.variable OWNER TO postgres;
 
 --
--- TOC entry 2707 (class 2606 OID 26470)
 -- Name: studentBasicInfo studentIdPKey; Type: CONSTRAINT; Schema: postgres; Owner: postgres
 --
 
@@ -136,7 +126,6 @@ ALTER TABLE ONLY postgres."studentBasicInfo"
 
 
 --
--- TOC entry 2709 (class 2606 OID 26502)
 -- Name: studentBasicInfo unique_contact; Type: CONSTRAINT; Schema: postgres; Owner: postgres
 --
 
@@ -145,7 +134,6 @@ ALTER TABLE ONLY postgres."studentBasicInfo"
 
 
 --
--- TOC entry 2711 (class 2606 OID 26480)
 -- Name: studFeesInfo unique_transaction; Type: CONSTRAINT; Schema: postgres; Owner: postgres
 --
 
@@ -154,7 +142,6 @@ ALTER TABLE ONLY postgres."studFeesInfo"
 
 
 --
--- TOC entry 2712 (class 2606 OID 26496)
 -- Name: studFeesInfo fk_studID_fees; Type: FK CONSTRAINT; Schema: postgres; Owner: postgres
 --
 
@@ -163,15 +150,12 @@ ALTER TABLE ONLY postgres."studFeesInfo"
 
 
 --
--- TOC entry 2713 (class 2606 OID 26491)
 -- Name: studentSubjects fk_studID_lang; Type: FK CONSTRAINT; Schema: postgres; Owner: postgres
 --
 
 ALTER TABLE ONLY postgres."studentSubjects"
     ADD CONSTRAINT "fk_studID_lang" FOREIGN KEY ("studID") REFERENCES postgres."studentBasicInfo"("Student_ID") ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
 
-
--- Completed on 2021-04-22 19:40:07
 
 --
 -- PostgreSQL database dump complete

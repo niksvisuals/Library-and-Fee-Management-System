@@ -1,8 +1,6 @@
 
 import javax.swing.*;
 import java.sql.*;
-import net.proteanit.sql.DbUtils;
-import org.postgresql.util.PSQLException;
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
